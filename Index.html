@@ -1,0 +1,316 @@
+Conversation opened. 1 unread message.
+
+Skip to content
+Using Gmail with screen readers
+in:spam 
+1 of 4
+(no subject)
+Spam
+jhayr formentera <jhayrformentera@gmail.com>
+Attachments
+12:40 AM (0 minutes ago)
+to me
+
+Why is this message in spam? This message is similar to messages that were identified as spam in the past.
+Report not spam
+aaaa
+ One attachment
+  •  Scanned by Gmail
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e293b; /* Professional Slate Blue */
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --accent: #ce1126; 
+            --success: #22c55e;
+            --border: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        #terminal {
+            background-color: var(--card);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            width: 850px;
+            margin-top: 50px;
+            border: 1px solid var(--border);
+            height: fit-content;
+        }
+
+        h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; margin-top: 0; }
+        
+        /* New Logo Style */
+        .system-logo {
+            font-size: 28px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            display: inline-block;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+        }
+
+        input { 
+            padding: 12px; border: 1px solid var(--border); border-radius: 6px;
+            font-family: inherit; margin-bottom: 15px; transition: 0.2s;
+        }
+        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(30,41,59,0.1); }
+        
+        .search-container { margin-bottom: 20px; position: relative; }
+        .search-bar { width: 100%; box-sizing: border-box; padding-left: 40px; background: #f1f5f9; border: none; }
+
+        button { 
+            padding: 12px 24px; cursor: pointer; font-family: inherit; font-weight: 600;
+            border: none; border-radius: 6px; background: var(--primary); color: white; transition: 0.2s;
+        }
+        button:hover { background: #334155; transform: translateY(-1px); }
+        
+        .stats-row { display: flex; gap: 15px; margin-bottom: 25px; }
+        .stat-box { 
+            flex: 1; padding: 15px; border-radius: 8px; background: #f1f5f9; 
+            border-left: 4px solid var(--primary);
+        }
+        .stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+        .stat-value { font-size: 20px; font-weight: 600; margin-top: 5px; }
+
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .menu-card { 
+            padding: 20px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer;
+            transition: 0.3s; background: #fff;
+        }
+        .menu-card:hover { border-color: var(--primary); background: #f8fafc; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+        table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; }
+        th { text-align: left; padding: 12px; border-bottom: 2px solid var(--border); color: #64748b; font-size: 12px; }
+        td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+        
+        .low-stock { color: var(--accent); font-weight: 700; background: #fff1f2; }
+        .hidden { display: none; }
+        .action-btn { color: #2563eb; cursor: pointer; font-weight: 600; margin-right: 15px; font-size: 12px; }
+        .action-btn.del { color: var(--accent); }
+    </style>
+</head>
+<body>
+
+<div id="terminal">
+
+    <div id="screen-login" style="text-align: center;">
+        <div style="margin-bottom: 40px;">
+            <div class="system-logo">Inventory System</div>
+            <p style="color: #64748b;">Internal Access Portal</p>
+        </div>
+        <input type="text" id="login-user" placeholder="Username" value="admin" style="width: 305px;"><br>
+        <input type="password" id="login-pass" placeholder="Password" value="1234" style="width: 305px;"><br>
+        <button onclick="handleLogin()" style="width: 305px;">Login</button>
+        <p id="login-err" style="color:var(--accent); font-size: 14px;"></p>
+    </div>
+
+    <div id="screen-main" class="hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <div class="system-logo" style="font-size: 20px;">Inventory System</div>
+            <button onclick="location.reload()" style="background: #f1f5f9; color: var(--text); padding: 8px 16px;">Logout</button>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-label">Total SKUs</div>
+                <div id="stat-total-items" class="stat-value">0</div>
+            </div>
+            <div class="stat-box" style="border-left-color: var(--success);">
+                <div class="stat-label">Stock Value</div>
+                <div id="stat-total-value" class="stat-value">₱0.00</div>
+            </div>
+            <div class="stat-box" style="border-left-color: var(--accent);">
+                <div class="stat-label">Critical Stock</div>
+                <div id="stat-low-stock" class="stat-value">0</div>
+            </div>
+        </div>
+
+        <div class="menu-grid">
+            <div class="menu-card" onclick="showScreen('screen-add')">
+                <h3>Add New Entry</h3>
+                <p style="font-size: 13px; color: #64748b;">Register a new product to the database.</p>
+            </div>
+            <div class="menu-card" onclick="renderInventory()">
+                <h3>Stock Management</h3>
+                <p style="font-size: 13px; color: #64748b;">Search, Edit, or Remove existing stock.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-add" class="hidden">
+        <h3>Product Entry Form</h3>
+        <input type="hidden" id="edit-index">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <label style="font-size: 12px; font-weight: 700;">SKU Number</label><br>
+                <input type="text" id="in-id" style="width: 100%; box-sizing: border-box;">
+            </div>
+            <div>
+                <label style="font-size: 12px; font-weight: 700;">Description</label><br>
+                <input type="text" id="in-name" style="width: 100%; box-sizing: border-box;">
+            </div>
+            <div>
+                <label style="font-size: 12px; font-weight: 700;">Quantity on Hand</label><br>
+                <input type="number" id="in-qty" style="width: 100%; box-sizing: border-box;">
+            </div>
+            <div>
+                <label style="font-size: 12px; font-weight: 700;">Price (PHP)</label><br>
+                <input type="number" id="in-price" step="0.01" style="width: 100%; box-sizing: border-box;">
+            </div>
+        </div>
+        <br>
+        <button id="save-btn" onclick="saveItem()">Commit to System</button>
+        <button onclick="showScreen('screen-main')" style="background: transparent; color: #64748b;">Cancel</button>
+    </div>
+
+    <div id="screen-view" class="hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3>Database Explorer</h3>
+            <button onclick="showScreen('screen-main')" style="background: #f1f5f9; color: var(--text); padding: 8px 16px;">Return</button>
+        </div>
+
+        <div class="search-container">
+            <span style="position: absolute; left: 15px; top: 12px; color: #64748b;">🔍</span>
+            <input type="text" id="search-input" class="search-bar" placeholder="Filter by name or SKU..." onkeyup="renderInventory()">
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>DESCRIPTION</th>
+                    <th>STOCK</th>
+                    <th>UNIT PRICE</th>
+                    <th>ACTION</th>
+                </tr>
+            </thead>
+            <tbody id="inventory-body"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let inventory = [
+        {id: "PH-001", name: "Utility Cable", qty: 15, price: 250.00},
+        {id: "PH-002", name: "Battery Pack", qty: 3, price: 1200.00}
+    ];
+
+    const phCurrency = new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
+    });
+
+    function updateStats() {
+        let totalVal = 0;
+        let lowCount = 0;
+        inventory.forEach(item => {
+            totalVal += (item.qty * item.price);
+            if(item.qty <= 5) lowCount++;
+        });
+        document.getElementById('stat-total-items').innerText = inventory.length;
+        document.getElementById('stat-total-value').innerText = phCurrency.format(totalVal);
+        document.getElementById('stat-low-stock').innerText = lowCount;
+    }
+
+    function handleLogin() {
+        if(document.getElementById('login-user').value === "admin" && 
+           document.getElementById('login-pass').value === "1234") {
+            updateStats();
+            showScreen('screen-main');
+        } else {
+            document.getElementById('login-err').innerText = "Access Denied.";
+        }
+    }
+
+    function showScreen(screenId) {
+        document.querySelectorAll('#terminal > div').forEach(div => div.classList.add('hidden'));
+        document.getElementById(screenId).classList.remove('hidden');
+        if(screenId === 'screen-add' && !document.getElementById('edit-index').value) {
+            document.querySelectorAll('#screen-add input:not([type="hidden"])').forEach(i => i.value = "");
+        }
+    }
+
+    function saveItem() {
+        const id = document.getElementById('in-id').value;
+        const name = document.getElementById('in-name').value;
+        const qty = parseInt(document.getElementById('in-qty').value);
+        const price = parseFloat(document.getElementById('in-price').value);
+        const editIdx = document.getElementById('edit-index').value;
+
+        if(id && name && !isNaN(qty)) {
+            const itemData = {id, name, qty, price};
+            if(editIdx === "") inventory.push(itemData);
+            else {
+                inventory[parseInt(editIdx)] = itemData;
+                document.getElementById('edit-index').value = "";
+            }
+            updateStats();
+            renderInventory();
+        }
+    }
+
+    function editItem(index) {
+        const item = inventory[index];
+        document.getElementById('edit-index').value = index;
+        document.getElementById('in-id').value = item.id;
+        document.getElementById('in-name').value = item.name;
+        document.getElementById('in-qty').value = item.qty;
+        document.getElementById('in-price').value = item.price;
+        showScreen('screen-add');
+    }
+
+    function deleteItem(index) {
+        if(confirm("Confirm deletion?")) {
+            inventory.splice(index, 1);
+            updateStats();
+            renderInventory();
+        }
+    }
+
+    function renderInventory() {
+        const body = document.getElementById('inventory-body');
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        body.innerHTML = ''; 
+
+        inventory.forEach((item, index) => {
+            if(item.name.toLowerCase().includes(searchTerm) || item.id.toLowerCase().includes(searchTerm)) {
+                const isLow = item.qty <= 5;
+                body.innerHTML += `<tr class="${isLow ? 'low-stock' : ''}">
+                    <td>${item.id}</td>
+                    <td>${item.name}</td>
+                    <td>${item.qty} ${isLow ? '⚠️' : ''}</td>
+                    <td>${phCurrency.format(item.price)}</td>
+                    <td>
+                        <span class="action-btn" onclick="editItem(${index})">EDIT</span>
+                        <span class="action-btn del" onclick="deleteItem(${index})">DELETE</span>
+                    </td>
+                </tr>`;
+            }
+        });
+        showScreen('screen-view');
+    }
+</script>
+</body>
+</html>
+index.html
+Displaying index.html.
